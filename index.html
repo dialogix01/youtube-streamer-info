@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Эфир 24/7 — YouTube-стример</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #5a5a5a;
+    --accent: #cc0000;
+    --card: #f7f7f8;
+    --border: #e3e3e6;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121212;
+      --fg: #f1f1f1;
+      --muted: #a8a8a8;
+      --accent: #ff5c5c;
+      --card: #1c1c1e;
+      --border: #2e2e31;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121212;
+    --fg: #f1f1f1;
+    --muted: #a8a8a8;
+    --accent: #ff5c5c;
+    --card: #1c1c1e;
+    --border: #2e2e31;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 20px 80px;
+  }
+  header {
+    margin-bottom: 40px;
+  }
+  h1 {
+    font-size: 1.9rem;
+    margin: 0 0 6px;
+  }
+  .tagline {
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+  nav {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  nav a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  nav a:hover { text-decoration: underline; }
+  h2 {
+    font-size: 1.3rem;
+    margin-top: 44px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin: 18px 0;
+  }
+  ul { padding-left: 22px; }
+  li { margin: 6px 0; }
+  .muted { color: var(--muted); font-size: 0.92rem; }
+  footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+  a { color: var(--accent); }
+  code {
+    background: var(--card);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Эфир 24/7</h1>
+    <div class="tagline">Личное приложение для автоматизации видеотрансляций на собственный YouTube-канал</div>
+    <nav>
+      <a href="#about">О приложении</a>
+      <a href="#privacy">Политика конфиденциальности</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+  </header>
+
+  <section id="about">
+    <h2>О приложении</h2>
+    <p>
+      «Эфир 24/7» — это самостоятельно развёрнутое (self-hosted) веб-приложение,
+      которое запускает круглосуточную или по расписанию видеотрансляцию на YouTube
+      из заранее загруженных видеофайлов. Приложение работает на собственном сервере
+      владельца и управляется только им самим через закрытую панель с паролем.
+    </p>
+    <div class="card">
+      <strong>Что умеет приложение:</strong>
+      <ul>
+        <li>Запускать и останавливать прямые трансляции на YouTube-канале владельца по расписанию</li>
+        <li>Создавать новую трансляцию через YouTube Data API, назначать её название, описание и настройки доступа</li>
+        <li>Отправлять видеопоток на уже существующую трансляцию по ключу RTMP</li>
+        <li>Показывать статус трансляции (идёт/остановлена), полученный через YouTube API</li>
+      </ul>
+    </div>
+    <p class="muted">
+      Приложение предназначено только для личного использования владельцем канала
+      и не распространяется как публичный сервис. Оно не имеет собственных
+      пользователей, кроме администратора, который его развернул.
+    </p>
+  </section>
+
+  <section id="scopes">
+    <h2>Используемый доступ Google</h2>
+    <p>
+      Приложение запрашивает OAuth-доступ к Google-аккаунту владельца со scope:
+    </p>
+    <div class="card">
+      <code>https://www.googleapis.com/auth/youtube</code>
+      <p class="muted" style="margin-top:10px; margin-bottom:0;">
+        Этот доступ используется исключительно для создания, запуска, остановки
+        и обновления метаданных (название, описание, превью) прямых трансляций
+        на собственном YouTube-канале владельца. Приложение не обращается
+        к чужим каналам и не передаёт этот доступ третьим лицам.
+      </p>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <h2>Политика конфиденциальности</h2>
+    <p><span class="muted">Дата последнего обновления: 3 ноября 2026</span></p>
+
+    <h3 style="margin-top:28px;">Какие данные используются</h3>
+    <p>
+      Приложение получает через YouTube Data API v3 доступ только к данным,
+      необходимым для управления собственными трансляциями владельца аккаунта:
+      информация о канале, созданные трансляции, их статус и метаданные
+      (название, описание, превью, настройки доступа).
+    </p>
+
+    <h3 style="margin-top:22px;">Как данные хранятся</h3>
+    <p>
+      OAuth-токены доступа (refresh token) хранятся в зашифрованном виде
+      локально на сервере владельца приложения и не передаются никаким
+      сторонним сервисам или третьим лицам. Доступ к серверу защищён паролем,
+      известным только владельцу.
+    </p>
+
+    <h3 style="margin-top:22px;">Как данные используются</h3>
+    <p>
+      Полученные данные используются исключительно для работы функций
+      приложения: автоматического создания и ведения прямых трансляций
+      на канале владельца. Данные не используются для рекламы, аналитики,
+      обучения моделей или передачи третьим сторонам.
+    </p>
+
+    <h3 style="margin-top:22px;">Удаление данных</h3>
+    <p>
+      Владелец может в любой момент отозвать доступ приложения через
+      <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">
+        настройки безопасности своего Google-аккаунта
+      </a>, а также удалить локально сохранённые токены, остановив приложение
+      и удалив папку с данными на сервере.
+    </p>
+
+    <h3 style="margin-top:22px;">Передача третьим лицам</h3>
+    <p>
+      Приложение не продаёт, не передаёт и не раскрывает полученные от Google
+      данные каким-либо третьим лицам или сервисам, за исключением прямого
+      взаимодействия с API YouTube/Google, необходимого для работы функций,
+      описанных выше.
+    </p>
+  </section>
+
+  <section id="contact">
+    <h2>Контакты</h2>
+    <p>
+      По вопросам, связанным с приложением и обработкой данных, можно
+      связаться по адресу: <a href="mailto:ЗАМЕНИ-НА-СВОЙ-EMAIL@example.com">ЗАМЕНИ-НА-СВОЙ-EMAIL@example.com</a>
+    </p>
+  </section>
+
+  <footer>
+    Эфир 24/7 — личный проект для автоматизации YouTube-трансляций.
+  </footer>
+
+</div>
+</body>
+</html>
